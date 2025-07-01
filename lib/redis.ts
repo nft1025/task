@@ -1,5 +1,3 @@
-"use server"
-
 import Redis from "ioredis"
 
 let client: Redis | null = null
