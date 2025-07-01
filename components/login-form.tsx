@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { login, register } from "@/lib/auth"
-import { motion } from "framer-motion"
+import { UserRound, KeyRound, LogIn, UserPlus } from "lucide-react"
 
 export default function LoginForm() {
   const [username, setUsername] = useState("")
@@ -24,9 +24,13 @@ export default function LoginForm() {
 
     try {
       await login(username, password)
-      window.location.reload()
+      // Add a small delay to ensure the session is set
+      setTimeout(() => {
+        window.location.reload()
+      }, 100)
     } catch (err) {
-      setError("Invalid username or password")
+      console.error("Login error:", err)
+      setError("Invalid username or password. Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -51,233 +55,133 @@ export default function LoginForm() {
 
     try {
       await register(username, password)
-      window.location.reload()
+      // Add a small delay to ensure the session is set
+      setTimeout(() => {
+        window.location.reload()
+      }, 100)
     } catch (err) {
-      setError("Username already exists")
+      console.error("Registration error:", err)
+      setError("Username already exists or registration failed. Please try again.")
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-      <Card className="backdrop-blur-sm bg-white/80 border-none shadow-xl">
-        <Tabs defaultValue="login" value={activeTab} onValueChange={setActiveTab}>
-          <CardHeader className="pb-2">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger
-                value="login"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white transition-all duration-300"
-              >
-                Login
-              </TabsTrigger>
-              <TabsTrigger
-                value="register"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white transition-all duration-300"
-              >
-                Register
-              </TabsTrigger>
-            </TabsList>
-          </CardHeader>
-          <CardContent className="pt-4">
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                className="mb-4 p-2 bg-red-50 border border-red-200 text-red-600 text-sm rounded-md"
-              >
-                {error}
-              </motion.div>
-            )}
+    <Card className="glass-effect animate-fade-in shadow-lg">
+      <Tabs defaultValue="login" value={activeTab} onValueChange={setActiveTab}>
+        <CardHeader className="pb-0">
+          <TabsList className="grid w-full grid-cols-2 h-14">
+            <TabsTrigger
+              value="login"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-300"
+            >
+              <LogIn className="mr-2 h-4 w-4" />
+              Login
+            </TabsTrigger>
+            <TabsTrigger
+              value="register"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-300"
+            >
+              <UserPlus className="mr-2 h-4 w-4" />
+              Register
+            </TabsTrigger>
+          </TabsList>
+        </CardHeader>
+        <CardContent className="pt-6">
+          {error && (
+            <div className="bg-destructive/10 text-destructive p-3 rounded-md mb-4 text-sm animate-fade-in">
+              {error}
+            </div>
+          )}
 
-            <TabsContent value="login" className="mt-0">
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div className="space-y-2">
-                  <div className="relative">
-                    <Input
-                      placeholder="Username"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      required
-                      className="pl-10 bg-white/50 focus:bg-white transition-all duration-300 border-purple-100 focus:border-purple-300"
-                    />
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-purple-400">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                      </svg>
-                    </div>
-                  </div>
+          <TabsContent value="login" className="animate-fade-in">
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="space-y-2">
+                <div className="relative">
+                  <UserRound className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="pl-10 transition-all focus:ring-2 focus:ring-primary/50"
+                    required
+                  />
                 </div>
-                <div className="space-y-2">
-                  <div className="relative">
-                    <Input
-                      type="password"
-                      placeholder="Password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      className="pl-10 bg-white/50 focus:bg-white transition-all duration-300 border-purple-100 focus:border-purple-300"
-                    />
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-purple-400">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                      </svg>
-                    </div>
-                  </div>
+              </div>
+              <div className="space-y-2">
+                <div className="relative">
+                  <KeyRound className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="pl-10 transition-all focus:ring-2 focus:ring-primary/50"
+                    required
+                  />
                 </div>
-                <Button
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <div className="flex items-center">
-                      <svg
-                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      Logging in...
-                    </div>
-                  ) : (
-                    "Login"
-                  )}
-                </Button>
-              </form>
-            </TabsContent>
+              </div>
+              <Button type="submit" className="w-full button-shine transition-all" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <span className="animate-spin-slow mr-2">⏳</span>
+                    Logging in...
+                  </>
+                ) : (
+                  <>
+                    <LogIn className="mr-2 h-4 w-4" />
+                    Login
+                  </>
+                )}
+              </Button>
+            </form>
+          </TabsContent>
 
-            <TabsContent value="register" className="mt-0">
-              <form onSubmit={handleRegister} className="space-y-4">
-                <div className="space-y-2">
-                  <div className="relative">
-                    <Input
-                      placeholder="Username"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      required
-                      className="pl-10 bg-white/50 focus:bg-white transition-all duration-300 border-purple-100 focus:border-purple-300"
-                    />
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-purple-400">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                      </svg>
-                    </div>
-                  </div>
+          <TabsContent value="register" className="animate-fade-in">
+            <form onSubmit={handleRegister} className="space-y-4">
+              <div className="space-y-2">
+                <div className="relative">
+                  <UserRound className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="pl-10 transition-all focus:ring-2 focus:ring-primary/50"
+                    required
+                  />
                 </div>
-                <div className="space-y-2">
-                  <div className="relative">
-                    <Input
-                      type="password"
-                      placeholder="Password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      className="pl-10 bg-white/50 focus:bg-white transition-all duration-300 border-purple-100 focus:border-purple-300"
-                    />
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-purple-400">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                      </svg>
-                    </div>
-                  </div>
+              </div>
+              <div className="space-y-2">
+                <div className="relative">
+                  <KeyRound className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="pl-10 transition-all focus:ring-2 focus:ring-primary/50"
+                    required
+                  />
                 </div>
-                <Button
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <div className="flex items-center">
-                      <svg
-                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      Registering...
-                    </div>
-                  ) : (
-                    "Register"
-                  )}
-                </Button>
-              </form>
-            </TabsContent>
-          </CardContent>
-        </Tabs>
-      </Card>
-    </motion.div>
+              </div>
+              <Button type="submit" className="w-full button-shine transition-all" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <span className="animate-spin-slow mr-2">⏳</span>
+                    Creating account...
+                  </>
+                ) : (
+                  <>
+                    <UserPlus className="mr-2 h-4 w-4" />
+                    Register
+                  </>
+                )}
+              </Button>
+            </form>
+          </TabsContent>
+        </CardContent>
+      </Tabs>
+    </Card>
   )
 }

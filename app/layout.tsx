@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Time Manager',
-  description: 'Created by Jasmine Lapidario, Edward Jeshua Leonardo, John Carlo Salamanca, Neil Francis Teresa',
-  generator: 'HALIBURTON',
+  title: 'v0 App',
+  description: 'Created with v0',
+  generator: 'v0.dev',
 }
 
 export default function RootLayout({
