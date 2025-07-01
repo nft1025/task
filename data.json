@@ -1,0 +1,10 @@
+{
+  "users": [
+    {
+      "id": "1ea82b45-8cef-4b04-9bb3-862dea655145",
+      "username": "haha",
+      "passwordHash": "MTIzNDU2"
+    }
+  ],
+  "tasks": []
+}
