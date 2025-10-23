@@ -6,7 +6,7 @@ export async function getRedisClient(): Promise<Redis> {
   if (!client) {
     const redisUrl =
       process.env.REDIS_URL ||
-      "redis://default:MjaXah64Sqz2AFqEDC2as3VcESaFqPoB@redis-19027.c295.ap-southeast-1-1.ec2.redns.redis-cloud.com:19027"
+      "redis://default:nh4F0wjCiYjHSBUeqbT60YPzvye7moET@redis-14007.c321.us-east-1-2.ec2.redns.redis-cloud.com:14007"
 
     // Parse the Redis URL
     const url = new URL(redisUrl)
